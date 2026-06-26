@@ -15,7 +15,6 @@
   "dependencies": {
     "@ai-sdk/google": "latest",
     "@neondatabase/serverless": "latest",
-    "@next/swc-win32-x64-msvc": "^16.2.9",
     "@prisma/adapter-neon": "latest",
     "@prisma/client": "latest",
     "@tanstack/react-table": "latest",
@@ -27,7 +26,6 @@
     "dotenv": "^17.4.2",
     "framer-motion": "latest",
     "lightningcss": "^1.32.0",
-    "lightningcss-win32-x64-msvc": "^1.32.0",
     "lucide-react": "latest",
     "next": "latest",
     "papaparse": "latest",
@@ -37,6 +35,10 @@
     "tailwind-merge": "latest",
     "ws": "^8.21.0",
     "zod": "latest"
+  },
+  "optionalDependencies": {
+    "@next/swc-win32-x64-msvc": "^16.2.9",
+    "lightningcss-win32-x64-msvc": "^1.32.0"
   },
   "devDependencies": {
     "@prisma/debug": "^7.8.0",

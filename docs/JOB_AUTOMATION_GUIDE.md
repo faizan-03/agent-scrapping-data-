@@ -130,10 +130,9 @@ scraping.
 ### Daily run via GitHub Actions
 
 `.github/workflows/morning.yml` runs the full pipeline daily at 04:00 UTC
-(09:00 PKT) and can be triggered by hand from the **Actions** tab. It runs on a
-Windows runner to match the win32-pinned dependencies in `package.json`, and is
-the recommended way to make the LinkedIn connector actually harvest (Vercel's
-cron cannot reach LinkedIn).
+(09:00 PKT) and can be triggered by hand from the **Actions** tab. It runs on
+`ubuntu-latest` and is the recommended way to make the LinkedIn connector
+actually harvest (Vercel's cron cannot reach LinkedIn).
 
 Add these as repository secrets (**Settings → Secrets and variables → Actions**):
 
