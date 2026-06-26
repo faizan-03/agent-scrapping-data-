@@ -10,6 +10,7 @@ const envSchema = z.object({
   GOOGLE_GENERATIVE_AI_API_KEY2: z.string().optional(),
   GOOGLE_GENERATIVE_AI_API_KEY3: z.string().optional(),
   GOOGLE_GENERATIVE_AI_API_KEY4: z.string().optional(),
+  GEMINI_MODEL: z.string().optional(),
   RESUME_TEXT: z.string().optional(),
   BREVO_API_KEY: z.string().optional(),
   BREVO_EMAIL_FROM: z.string().email().optional(),

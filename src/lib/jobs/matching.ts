@@ -72,7 +72,7 @@ export async function scoreJobWithGemini(
 
     try {
       const result = await generateObject({
-        model: provider("gemini-2.0-flash"),
+        model: provider(env.GEMINI_MODEL ?? "gemini-2.0-flash"),
         schema: matchSchema,
         prompt: [
           "Score this job against the resume from 0-100.",

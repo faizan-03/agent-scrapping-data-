@@ -66,7 +66,17 @@ export async function runMorningJob() {
       },
     });
 
-    await sendRunEmail(finishedRun.id);
+    // Email is a non-critical final step. The jobs are already persisted, so a
+    // transient email failure must not flip the whole run to FAILED.
+    try {
+      await sendRunEmail(finishedRun.id);
+    } catch (emailError) {
+      console.warn(
+        "Run succeeded but the digest email failed to send.",
+        emailError instanceof Error ? emailError.message : emailError,
+      );
+    }
+
     return finishedRun;
   } catch (error) {
     await prisma.cronRun.update({
