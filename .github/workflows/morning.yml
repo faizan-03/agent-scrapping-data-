@@ -1,0 +1,60 @@
+name: Morning Job Hunt
+
+# Runs the full scrape -> score -> store -> email pipeline once a day.
+#
+# Why a Windows runner: package.json pins win32-only binaries
+# (@next/swc-win32-x64-msvc, lightningcss-win32-x64-msvc) as direct deps, so
+# `npm ci` only resolves cleanly on Windows. If you later move those to
+# optionalDependencies you can switch this to ubuntu-latest (much faster).
+#
+# Why GitHub Actions at all: the LinkedIn connector is blocked from Vercel's
+# serverless IPs. GitHub-hosted runners use different (Azure) IP ranges and are
+# far more likely to get through — but they are still datacenter IPs, so a given
+# run may occasionally be rate-limited. The other 7 sources are unaffected, and
+# for a guaranteed LinkedIn harvest you would point this at a self-hosted or
+# residential-proxy runner.
+
+on:
+  schedule:
+    # 04:00 UTC daily = 09:00 Pakistan Standard Time. Adjust as you like.
+    - cron: "0 4 * * *"
+  workflow_dispatch: {} # lets you trigger it by hand from the Actions tab
+
+concurrency:
+  group: morning-job
+  cancel-in-progress: false
+
+jobs:
+  hunt:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      GOOGLE_GENERATIVE_AI_API_KEY1: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY1 }}
+      GOOGLE_GENERATIVE_AI_API_KEY2: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY2 }}
+      GOOGLE_GENERATIVE_AI_API_KEY3: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY3 }}
+      GOOGLE_GENERATIVE_AI_API_KEY4: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY4 }}
+      RESUME_TEXT: ${{ secrets.RESUME_TEXT }}
+      BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+      BREVO_EMAIL_FROM: ${{ secrets.BREVO_EMAIL_FROM }}
+      BREVO_EMAIL_FROM_NAME: ${{ secrets.BREVO_EMAIL_FROM_NAME }}
+      BREVO_EMAIL_TO: ${{ secrets.BREVO_EMAIL_TO }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run morning job
+        run: npm run jobs:run

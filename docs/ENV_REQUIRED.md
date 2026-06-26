@@ -23,11 +23,20 @@ For Vercel production, set `APP_BASE_URL` to your deployed domain.
 ## Gemini
 
 ```env
-GOOGLE_GENERATIVE_AI_API_KEY="your-google-ai-studio-gemini-api-key"
+# Provide at least one key. Numbered keys are rotated when one hits its quota.
+GOOGLE_GENERATIVE_AI_API_KEY1="your-google-ai-studio-gemini-api-key"
+GOOGLE_GENERATIVE_AI_API_KEY2=""
+GOOGLE_GENERATIVE_AI_API_KEY3=""
+GOOGLE_GENERATIVE_AI_API_KEY4=""
+# The unnumbered key is also accepted if you prefer a single key:
+# GOOGLE_GENERATIVE_AI_API_KEY="your-gemini-key"
 RESUME_TEXT="paste your complete resume text here"
 ```
 
-`RESUME_TEXT` is used to score each job and generate the cover letter/resume variant.
+`RESUME_TEXT` is used to score jobs and generate the cover letter/resume variant.
+The morning job ranks all scraped jobs with a local heuristic and sends only the
+top candidates to Gemini, rotating across the numbered keys on quota errors. If
+no key (or no resume) is set, scoring falls back to the heuristic alone.
 
 ## Brevo
 
